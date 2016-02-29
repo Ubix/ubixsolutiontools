@@ -1,0 +1,24 @@
+{
+  "name": "ubixcli",
+  "version": "0.1.0",
+  "description": "Ubix CLI Utilities",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "ubix"
+  ],
+  "author": "Ubix",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^0.21.0",
+    "commander": "^2.9.0",
+    "fs-extra": "^0.26.5",
+    "prompt": "^1.0.0",
+    "sanitize-filename": "^1.5.3"
+  },
+  "bin": {
+    "ubix": "./ubixcli.js"
+  }
+}
