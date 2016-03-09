@@ -106,6 +106,23 @@ program
                 result.fileName = sanitizedName;
                 result.lastUpdate = (new Date()).toString();
                 fs.writeFileSync(path.join(solutionPath, 'ubix.json'), JSON.stringify(result, null, 4) + '\n');
+
+                // now create a basic .gitignore
+                var gitIgnore = '';
+                gitIgnore += '# Packaged Files #\n';
+                gitIgnore += '##################\n';
+                gitIgnore += '*.zip\n';
+                gitIgnore += '\n';
+                gitIgnore += '# IDE files #\n';
+                gitIgnore += '#############\n';
+                gitIgnore += 'nbproject\n';
+                gitIgnore += '.~lock.*\n';
+                gitIgnore += '.buildpath\n';
+                gitIgnore += '.idea\n';
+                gitIgnore += '.project\n';
+                gitIgnore += '.settings\n';
+                gitIgnore += 'composer.lock\n';
+                fs.writeFileSync(path.join(solutionPath, '.gitignore'), gitIgnore);
             } catch (err) {
                 console.log('Failed to create solution: ' + err);
             }
@@ -246,26 +263,39 @@ program
         options.solution = path.join(solutionPath, 'ubix.json').toString();
         var solutionFile = getSolutionFile(options);
 
-        var outputFile = options.file || path.join(solutionPath, 'ubix.zip');
-        var output = fs.createWriteStream(outputFile);
-        var archive = archiver('zip', {});
+        fs.readFile(solutionFile, function(err, manifest) {
+            if (err) {
+                console.log('Error reading solution file: ' + solutionFile + ': ' + err);
+                process.exit(1);
+            }
+            try {
+                manifest = JSON.parse(manifest);
+            } catch (err) {
+                console.log('Invalid solution manifest file: ' + solutionFile + ': ' + err);
+                process.exit(1);
+            }
 
-        output.on('close', function () {
-            console.log('Solution package created at ' + outputFile);;
-            console.log(archive.pointer() + ' total bytes');
+            var outputFile = options.file || path.join(solutionPath, manifest.fileName+'.zip');
+            var output = fs.createWriteStream(outputFile);
+            var archive = archiver('zip', {});
+
+            output.on('close', function () {
+                console.log('Solution package created at ' + outputFile);;
+                console.log(archive.pointer() + ' total bytes');
+            });
+
+            archive.on('error', function(err){
+                throw 'Error creating solution package: ' + err;
+            });
+
+            archive.pipe(output);
+            archive
+                .directory(path.join(solutionPath, 'data'), 'data')
+                .directory(path.join(solutionPath, 'scripts'), 'scripts')
+                .directory(path.join(solutionPath, 'dsl'), 'dsl')
+                .file(solutionFile, { name: 'ubix.json' });
+            archive.finalize();
         });
-
-        archive.on('error', function(err){
-            throw 'Error creating solution package: ' + err;
-        });
-
-        archive.pipe(output);
-        archive
-            .directory(path.join(solutionPath, 'data'), 'data')
-            .directory(path.join(solutionPath, 'scripts'), 'scripts')
-            .directory(path.join(solutionPath, 'dsl'), 'dsl')
-            .file(solutionFile, { name: 'ubix.json' });
-        archive.finalize();
     });
 
 program.parse(process.argv);
