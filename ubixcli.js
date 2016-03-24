@@ -177,7 +177,7 @@ function updateVersion(fromVersion, params) {
 program
     .command('version [update]')
     .alias('ver')
-    .description('reversion the solution package')
+    .description('re-version the solution package')
     .option('-s, --solution <solution>', 'The solution file.  Defaults to ./ubix.json')
     .option('-v, --version <version>', 'Set new version for solution')
     .option('-m, --minor [minor]', 'Increment minor version (by minor amount)')
