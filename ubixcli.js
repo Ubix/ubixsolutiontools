@@ -239,7 +239,7 @@ program
     .alias('pack')
     .description('Package solution for upload')
     .option('-p, --path <path>', 'The path to the solution folder.  Defaults to .')
-    .option('-f, --file <file>', 'The file to output the packages solution to.  Defaults to ubix.zip in solution folder.')
+    .option('-f, --file <file>', 'The file to output the packages solution to.  Defaults to {solution name}.zip in solution folder.')
     .action(function(options) {
         var solutionPath = options.path || '.';
 
