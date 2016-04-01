@@ -4,7 +4,7 @@ CLI tools for UBIX solutions
 
 ## Installation
 
-     npm install -g https://github.com/FrostVenturePartners/ubixsolutiontools
+     npm install -g https://github.com/Ubix/ubixsolutiontools
 
 ## Create a Solution
 
