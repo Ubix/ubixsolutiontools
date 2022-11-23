@@ -14,7 +14,7 @@
   "dependencies": {
     "archiver": "^0.21.0",
     "commander": "^2.9.0",
-    "fs-extra": "^0.26.5",
+    "fs-extra": "^0.30.0",
     "prompt": "^1.0.0",
     "sanitize-filename": "^1.5.3"
   },
